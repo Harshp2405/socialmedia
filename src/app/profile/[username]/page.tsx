@@ -31,7 +31,7 @@ import { notFound } from 'next/navigation';
 
 type Props = {
     params: {
-        username: string;
+        username: any;
     };
 };
 
