@@ -1,0 +1,46 @@
+/* pages/404.module.css */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f7f7f7;
+    color: #333;
+}
+
+.content {
+    text-align: center;
+}
+
+.header {
+    font-size: 100px;
+    font-weight: bold;
+    color: #ff6347;
+    margin-bottom: 20px;
+}
+
+.subheader {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.message {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.homeLink {
+    font-size: 18px;
+    color: #0070f3;
+    text-decoration: none;
+    border: 1px solid #0070f3;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.homeLink:hover {
+    background-color: #0070f3;
+    color: white;
+}
