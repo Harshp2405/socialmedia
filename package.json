@@ -14,6 +14,7 @@
     "@prisma/client": "^6.10.1",
     "@radix-ui/react-slot": "^1.2.3",
     "@types/react-dropzone": "^5.1.0",
+    "@vercel/speed-insights": "^1.2.0",
     "cloudinary": "^2.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

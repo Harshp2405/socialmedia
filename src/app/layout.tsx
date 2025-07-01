@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider, SignInButton, SignUpButton } from "@clerk/nextjs";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import Sidebar from "@/Components/Sidebar";
 import { Toaster } from "react-hot-toast";
 import { currentUser } from "@clerk/nextjs/server";
@@ -80,6 +81,7 @@ export default async function RootLayout({
                   </aside>
                   <div className="lg:col-span-9">
                     {children}
+                      <SpeedInsights />
                   </div>
                 </div>
               </div>
