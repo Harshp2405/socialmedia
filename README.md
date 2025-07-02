@@ -2,11 +2,14 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## My Notes 
 
-<!-- 
-
 webhook : use to send authincated/New user user send to postgrae database
 !!{} => true // convert object to boolean value
- -->
+
+
+
+ <!-- db Name:- neon-violet-mountain -->
+
+
 
 
 ## Getting Started
