@@ -3,6 +3,7 @@ import React from 'react'
 import { BellIcon, HomeIcon, UserIcon } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
 import { SignInButton, UserButton } from "@clerk/nextjs";
+import DropdownMenu from './DropDown';
 
 const DesktopNavbar = async () => {
     const user = await currentUser();
@@ -38,6 +39,8 @@ const DesktopNavbar = async () => {
                     </Link>
 
                     <UserButton />
+
+                    <DropdownMenu/>
                 </>
             ) : (
                 <SignInButton mode="modal">
