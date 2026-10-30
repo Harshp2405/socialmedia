@@ -4,7 +4,7 @@ import "./globals.css";
 import { ClerkProvider, SignInButton, SignUpButton } from "@clerk/nextjs";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import Sidebar from "@/Components/Sidebar";
 import { Toaster } from "react-hot-toast";
 import { currentUser } from "@clerk/nextjs/server";
@@ -29,9 +29,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
-  const user = await currentUser()
+  const user = await currentUser();
   return (
     <ClerkProvider>
       <html lang="en">
@@ -40,13 +38,15 @@ export default async function RootLayout({
         >
           <div className="min-h-screen">
             <div className="sticky-top">
-            <Navbar />
+              <Navbar />
             </div>
             {!user ? (
               <div>
                 <div className="max-w-md mx-auto mt-10 p-6 border border-gray-200 rounded-lg shadow-md bg-white">
                   <div className="mb-4">
-                    <h2 className="text-center text-xl font-semibold">Welcome Back!</h2>
+                    <h2 className="text-center text-xl font-semibold">
+                      Welcome Back!
+                    </h2>
                   </div>
                   <div>
                     <p className="text-center text-gray-500 mb-4">
@@ -71,23 +71,23 @@ export default async function RootLayout({
                   </div>
                 </div>
               </div>
-            ) : <main className="py-5">
-              <div className="max-w-7xl mx-auto px-4">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                  <aside className="hidden lg:block lg:col-span-3">
-                    <div className="max-h-[calc(100vh-5rem)] overflow-y-auto">
-                      <Sidebar />
-                    </div>
-                  </aside>
-                  <div className="lg:col-span-9">
-                    {children}
+            ) : (
+              <main className="py-5">
+                <div className="max-w-7xl mx-auto px-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    {/* <aside className="hidden lg:block lg:col-span-3">
+                      <div className="max-h-[calc(100vh-5rem)] overflow-y-auto">
+                        <Sidebar />
+                      </div>
+                    </aside> */}
+                    <div className="lg:col-span-9">
+                      {children}
                       <SpeedInsights />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </main> }
-           
-
+              </main>
+            )}
             {/* <Footer /> */}
           </div>
           <Toaster />

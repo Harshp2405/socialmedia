@@ -1,37 +1,56 @@
-import { getProfileByUsername, getUserLikedPosts, getUserPosts, isFollowing } from '@/Action/profile.action';
-import React from 'react'
-import ProfilePageClient from './ProfilePageClient';
-import { notFound } from 'next/navigation';
+import {
+  getProfileByUsername,
+  getUserLikedPosts,
+  getUserPosts,
+  isFollowing,
+  getUserFollowing,
+} from "@/Action/profile.action";
+import ProfilePageClient from "./ProfilePageClient";
+import Followinglist from "./Followinglist";
+import { notFound } from "next/navigation";
 
 type Props = {
-    params: Promise<{
-        username: string;
-    }>;
+  params: Promise<{
+    username: string;
+  }>;
 };
 
 const ProfilePageServer = async ({ params }: Props) => {
-    // Await the params since it's now a Promise
-    const { username } = await params;
+  const { username } = await params;
 
-    const user = await getProfileByUsername(username);
-    if (!user) return notFound();
+  const user = await getProfileByUsername(username);
+  if (!user) return notFound();
 
-    const [posts, likedPosts, isCurrentUserFollowing] = await Promise.all([
-        getUserPosts(user.id),
-        getUserLikedPosts(user.id),
-        isFollowing(user.id),
+  const [posts, likedPosts, isCurrentUserFollowing, followingUsers] =
+    await Promise.all([
+      getUserPosts(user.id),
+      getUserLikedPosts(user.id),
+      isFollowing(user.id),
+      getUserFollowing(user.id),
     ]);
 
-    return (
-        <div>
-            <ProfilePageClient
-                user={user}
-                posts={posts}
-                likedPosts={likedPosts}
-                isFollowing={isCurrentUserFollowing}
-            />
-        </div>
-    );
+  const followingUsersWithState = followingUsers.map((u) => ({
+    ...u,
+    isFollowing: true,
+  }));
+
+  return (
+    <>
+      <ProfilePageClient
+        user={user}
+        posts={posts}
+        likedPosts={likedPosts}
+        isFollowing={isCurrentUserFollowing}
+      />
+
+      {/* <div className="rounded-lg shadow p-6">
+        <Followinglist
+          followingUsers={followingUsersWithState}
+          currentUserId={user.id}
+        />
+      </div> */}
+    </>
+  );
 };
 
 export default ProfilePageServer;

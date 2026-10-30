@@ -4,36 +4,88 @@ import prisma from "@/lib/prisma"
 import { auth, currentUser } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
 
+// export async function syncUser() {
+//     try {
+//         const { userId } = await auth()
+//         const user = await currentUser()
+
+//         if (!userId || !user) return
+
+//         const existUser = await prisma.user.findUnique({
+//             where: {
+//                 clerkId: userId
+//             }
+//         })
+
+//         if (existUser) return existUser;
+
+//         const dbuser = await prisma.user.create({
+//             data: {
+//                 clerkId: userId,
+//                 name: `${user.firstName || ""} ${user.lastName || ""}`,
+//                 username: user.username ?? user.emailAddresses[0].emailAddress.split("@")[0],
+//                 email: user.emailAddresses[0].emailAddress,
+//                 image: user.imageUrl,
+//             }
+//         })
+
+//         return dbuser
+//     } catch (error) {
+//         console.log("Error in user Action ", error)
+//     }
+// }
+
 export async function syncUser() {
     try {
-        const { userId } = await auth()
-        const user = await currentUser()
+        const { userId } = await auth();
+        const user = await currentUser();
 
-        if (!userId || !user) return
+        if (!userId || !user) return null;
 
-        const existUser = await prisma.user.findUnique({
-            where: {
-                clerkId: userId
+        const email = user.emailAddresses?.[0]?.emailAddress ?? null;
+
+        // 1️⃣ Try finding user by clerkId
+        let dbUser = await prisma.user.findUnique({
+            where: { clerkId: userId },
+        });
+
+        if (dbUser) return dbUser;
+
+        // 2️⃣ If email exists, try finding by email
+        if (email) {
+            dbUser = await prisma.user.findUnique({
+                where: { email },
+            });
+
+            // If user exists with same email, just update clerkId
+            if (dbUser) {
+                return await prisma.user.update({
+                    where: { id: dbUser.id },
+                    data: { clerkId: userId },
+                });
             }
-        })
+        }
 
-        if (existUser) return existUser;
-
-        const dbuser = await prisma.user.create({
+        // 3️⃣ If no user exists, create a new one
+        return await prisma.user.create({
             data: {
                 clerkId: userId,
-                name: `${user.firstName || ""} ${user.lastName || ""}`,
-                username: user.username ?? user.emailAddresses[0].emailAddress.split("@")[0],
-                email: user.emailAddresses[0].emailAddress,
-                image: user.imageUrl,
-            }
-        })
-
-        return dbuser
+                name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
+                username:
+                    user.username ??
+                    email?.split("@")[0] ??
+                    `user_${userId.slice(0, 6)}`,
+                email,
+                image: user.imageUrl ?? null,
+            },
+        });
     } catch (error) {
-        console.log("Error in user Action ", error)
+        console.error("syncUser error:", error);
+        return null;
     }
 }
+
+
 
 
 export async function getUserBtClerkId(clerkId: string) {
@@ -64,7 +116,8 @@ export async function getDatabaseUserId(): Promise<string | null> {
     const user = await getUserBtClerkId(clerkId);
 
     if (!user) {
-        throw new Error("User Not Found");
+        console.log("User Not Found");
+        return null
     }
 
     return user.id;
@@ -164,3 +217,4 @@ export const togglefollow = async (targetuserId:string)=>{
         
     }
 } 
+

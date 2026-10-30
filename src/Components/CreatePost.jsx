@@ -7,6 +7,7 @@ import { createPost } from "@/Action/post.action";
 import toast from "react-hot-toast";
 import ImageUpload from "./ImageUpload";
 import { uploadImageToCloudinary } from "@/lib/uploadImageToCloudinary";
+import { set } from "date-fns";
 
 const Createpost = () => {
   
@@ -16,6 +17,7 @@ const Createpost = () => {
     const [imageUrl, setImageUrl] = useState("");
     const [isPosting, setIsPosting] = useState(false);
     const [showImageUpload, setShowImageUpload] = useState(false);
+    const [showError, setshowError] = useState(false);
     
     const handleSubmit = async () => {
         if (!content.trim() && !imageFile) return;
@@ -39,7 +41,12 @@ const Createpost = () => {
             }
         } catch (error) {
             console.error("Failed to create post:", error);
-            toast.error("Failed to create post");
+            setContent("");
+            setImageFile(null);
+            setImageUrl("");
+            setShowImageUpload(false)
+
+            toast.error(error.message);
         } finally {
             setIsPosting(false);
         }

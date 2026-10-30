@@ -198,3 +198,16 @@ export async function isFollowing(userId: string) {
     }
 }
 
+
+export const getUserFollowing = async (userId: string) => {
+    try {
+        const following = await prisma.follows.findMany({
+            where: { followerId: userId },
+            include: { following: true },
+        });
+        return following.map(f => f.following);
+    } catch (error) {
+        console.error("Error fetching following users", error);
+        return [];
+    }
+};
